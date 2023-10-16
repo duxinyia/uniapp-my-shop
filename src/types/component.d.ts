@@ -28,4 +28,4 @@ export type PageResult<T> = {
 }
 
 // 组件实例类型
-export type XtxGuessInstance = InstanceType<typeof XcxGuess>
+export type XcxGuessInstance = InstanceType<typeof XcxGuess>
