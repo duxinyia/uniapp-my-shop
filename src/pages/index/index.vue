@@ -33,13 +33,32 @@ const guessRef = ref<XcxGuessInstance>()
 const onScrolltolower = () => {
   guessRef.value?.getMore()
 }
+const isTriggered = ref(false)
+// 自定义下拉刷新被触发
+const onRefresherrefresh = async () => {
+  // 开始动画
+  isTriggered.value = true
+  // await getHomeBannerData()
+  // await getCategoryData()
+  // await getHotData()
+  await Promise.all([getHomeBannerData(), getCategoryData(), getHotData()])
+  // 关闭动画
+  isTriggered.value = false
+}
 </script>
 
 <template>
   <!-- 自定义导航栏 -->
   <CustomNavbar />
   <!-- 滚动容器 -->
-  <scroll-view @scrolltolower="onScrolltolower" class="scroll-view" scroll-y>
+  <scroll-view
+    refresher-enabled
+    @refresherrefresh="onRefresherrefresh"
+    :refresher-triggered="isTriggered"
+    @scrolltolower="onScrolltolower"
+    class="scroll-view"
+    scroll-y
+  >
     <!-- 自定义轮播图 -->
     <XcxSwiper :list="bannerList" />
     <!-- 分类面板 -->
