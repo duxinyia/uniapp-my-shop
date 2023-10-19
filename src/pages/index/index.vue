@@ -3,6 +3,7 @@ import { getHomeBannerAPI, getCategoryMutliAPI, getHomeHotMutliAPI } from '@/ser
 import CustomNavbar from './componets/CustomNavbar.vue'
 import CategoryPanel from './componets/CategoryPanel.vue'
 import HotPanel from './componets/HotPanel.vue'
+import PageSkeleton from './componets/PageSkeleton.vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
@@ -22,10 +23,13 @@ const getHotData = async () => {
   const res = await getHomeHotMutliAPI()
   hotList.value = res.result
 }
-onLoad(() => {
-  getHomeBannerData()
-  getCategoryData()
-  getHotData()
+// 是否加载中标记
+const isLoading = ref(false)
+// 页面加载
+onLoad(async () => {
+  isLoading.value = true
+  await Promise.all([getHomeBannerData(), getCategoryData(), getHotData()])
+  isLoading.value = false
 })
 // 获取猜你喜欢组件实例
 const guessRef = ref<XcxGuessInstance>()
@@ -41,7 +45,10 @@ const onRefresherrefresh = async () => {
   // await getHomeBannerData()
   // await getCategoryData()
   // await getHotData()
+  // 重置猜你喜欢组件数据
+  guessRef.value?.resetData()
   await Promise.all([getHomeBannerData(), getCategoryData(), getHotData()])
+  guessRef.value?.getMore()
   // 关闭动画
   isTriggered.value = false
 }
@@ -59,14 +66,17 @@ const onRefresherrefresh = async () => {
     class="scroll-view"
     scroll-y
   >
-    <!-- 自定义轮播图 -->
-    <XcxSwiper :list="bannerList" />
-    <!-- 分类面板 -->
-    <CategoryPanel :list="categoryList" />
-    <!-- 热门推荐 -->
-    <HotPanel :list="hotList" />
-    <!-- 猜你喜欢 -->
-    <XcxGuess ref="guessRef" />
+    <PageSkeleton v-if="isLoading" />
+    <template v-else>
+      <!-- 自定义轮播图 -->
+      <XcxSwiper :list="bannerList" />
+      <!-- 分类面板 -->
+      <CategoryPanel :list="categoryList" />
+      <!-- 热门推荐 -->
+      <HotPanel :list="hotList" />
+      <!-- 猜你喜欢 -->
+      <XcxGuess ref="guessRef" />
+    </template>
   </scroll-view>
 </template>
 
