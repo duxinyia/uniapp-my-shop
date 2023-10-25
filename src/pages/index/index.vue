@@ -7,7 +7,7 @@ import PageSkeleton from './componets/PageSkeleton.vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
-import type { XcxGuessInstance } from '@/types/component'
+import { useGuessList } from '@/composables/index'
 const bannerList = ref<BannerItem[]>([])
 const categoryList = ref<CategoryItem[]>([])
 const hotList = ref<HotItem[]>([])
@@ -31,12 +31,14 @@ onLoad(async () => {
   await Promise.all([getHomeBannerData(), getCategoryData(), getHotData()])
   isLoading.value = false
 })
-// 获取猜你喜欢组件实例
-const guessRef = ref<XcxGuessInstance>()
-// 滚动触底
-const onScrolltolower = () => {
-  guessRef.value?.getMore()
-}
+// // 获取猜你喜欢组件实例
+// const guessRef = ref<XcxGuessInstance>()
+// // 滚动触底
+// const onScrolltolower = () => {
+//   guessRef.value?.getMore()
+// }
+// 组合式函数
+const { guessRef, onScrolltolower } = useGuessList()
 const isTriggered = ref(false)
 // 自定义下拉刷新被触发
 const onRefresherrefresh = async () => {
