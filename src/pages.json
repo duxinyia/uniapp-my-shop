@@ -33,6 +33,12 @@
 			}
 		},
 		{
+			"path": "pages/cart/cart2",
+			"style": {
+				"navigationBarTitleText": "购物车"
+			}
+		},
+		{
 			"path": "pages/category/category",
 			"style": {
 				"navigationBarTitleText": "分类"
@@ -96,7 +102,7 @@
 			}
 		]
 	},
-  // 分包加载规则
+	// 分包加载规则
 	"subPackages": [
 		{
 			"root": "pagesMember",
@@ -107,34 +113,46 @@
 						"navigationBarTitleText": "设置"
 					}
 				},
-        {
+				{
 					"path": "profile/profile",
 					"style": {
-            "navigationStyle": "custom",
-            "navigationBarTextStyle": "white",
+						"navigationStyle": "custom",
+						"navigationBarTextStyle": "white",
 						"navigationBarTitleText": "个人信息"
 					}
 				},
-        {
+				{
 					"path": "addressPage/addressPage",
 					"style": {
 						"navigationBarTitleText": "地址管理"
 					}
 				},
-        {
+				{
 					"path": "addressForm/addressForm",
 					"style": {
 						"navigationBarTitleText": "address-from"
 					}
 				}
-
+			]
+		},
+		{
+			"root": "pagesOrder",
+			"pages": [
+				{
+					"path": "create/create",
+					"style": {
+						"navigationBarTitleText": "填写订单"
+					}
+				}
 			]
 		}
 	],
-  "preloadRule": {
-    "pages/my/my":{
-      "network": "all",
-      "packages": ["pagesMember"]
-    }
-  }
+	"preloadRule": {
+		"pages/my/my": {
+			"network": "all",
+			"packages": [
+				"pagesMember"
+			]
+		}
+	}
 }

@@ -1,8 +1,30 @@
 <script setup lang="ts">
+import { putMemberCartBySkuIdAPI } from '@/services/cart'
+import type { AddressItem } from '@/types/addressPage'
+import type { CartItem } from '@/types/cart'
+import { useAddressStore } from '@/stores/modules/address'
 //子调父
 const emit = defineEmits<{
   (event: 'close'): void
 }>()
+const addressList = defineProps<{
+  addressList: AddressItem[]
+}>()
+// 修改收货地址
+const onChangeAddress = (item: AddressItem) => {
+  addressList.addressList.forEach((list) => {
+    list.isDefault = 0
+  })
+  item.isDefault = 1
+  // 修改选中收货地址
+  const addressStore = useAddressStore()
+  addressStore.changeSelectedAddress(item)
+}
+const addAddress = () => {
+  uni.navigateTo({
+    url: `/pagesMember/addressForm/addressForm`,
+  })
+}
 </script>
 
 <template>
@@ -13,12 +35,14 @@ const emit = defineEmits<{
     <view class="title">配送至</view>
     <!-- 内容 -->
     <view class="content">
-      <view class="item">
-        <view class="user">李明 13824686868</view>
-        <view class="address">北京市顺义区后沙峪地区安平北街6号院</view>
-        <text class="icon icon-checked"></text>
+      <view class="item" v-for="item in addressList.addressList" :key="item.id">
+        <view class="item-content" @tap="onChangeAddress(item)">
+          <view class="user">{{ item.receiver }} {{ item.contact }}</view>
+          <view class="address">{{ item.fullLocation }}{{ item.address }}</view>
+          <text class="icon" :class="{ 'icon-checked': item.isDefault }"></text>
+        </view>
       </view>
-      <view class="item">
+      <!-- <view class="item">
         <view class="user">王东 13824686868</view>
         <view class="address">北京市顺义区后沙峪地区安平北街6号院</view>
         <text class="icon icon-ring"></text>
@@ -27,10 +51,10 @@ const emit = defineEmits<{
         <view class="user">张三 13824686868</view>
         <view class="address">北京市朝阳区孙河安平北街6号院</view>
         <text class="icon icon-ring"></text>
-      </view>
+      </view> -->
     </view>
     <view class="footer">
-      <view class="button primary"> 新建地址 </view>
+      <view class="button primary" @tap="addAddress"> 新建地址 </view>
       <view v-if="false" class="button primary">确定</view>
     </view>
   </view>
@@ -125,3 +149,4 @@ const emit = defineEmits<{
   }
 }
 </style>
+@/stores/modules/adress
